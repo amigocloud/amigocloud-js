@@ -7,6 +7,7 @@ Installation
 
 Install as a bower package:
 
+..
 
     bower install amigocloud-js
     
