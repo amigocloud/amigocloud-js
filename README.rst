@@ -17,11 +17,12 @@ Dependencies
 
 Quick Start
 -----------
-
 Authentication
 ~~~~~~~~~~~~~~
 
-Once you have installed the library, all you need to do to get going is authenticate with the server:
+
+Once you have installed the library, all you need to do to 
+get going is authenticate with the server:
 
 .. code:: javascript
     
