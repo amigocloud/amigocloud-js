@@ -82,7 +82,8 @@ Lastly, you may also want to listen to a specific dataset's events:
 
 .. code:: javascript
     
-    Amigo.socket.listenDatasetEvents(userId, projectId, datasetId); // you can get userId from Amigo.user if you're authenticated (you should be at this point)
+    Amigo.socket.listenDatasetEvents(userId, projectId, datasetId); 
+    // you can get userId from Amigo.user if you're authenticated (you should be at this point)
 
 
 AmigoCloud 2014
