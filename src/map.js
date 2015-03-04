@@ -36,6 +36,33 @@ var map = L.Map.extend({
         if (!this.options.center) {
             this.setView([0.0, 0.0], 10);
         }
+
+        this.on('unload', function (e) {
+            L.amigo.AmigoStreet = L.tileLayer(
+                L.amigo.constants.amigoLayersData[0].tiles + '/{z}/{x}/{y}.png',
+                {
+                    attribution: 'Map data &copy; <a href="http://amigocloud.com">AmigoCloud</a>',
+                    name: 'AmigoStreet',
+                    maxZoom: 22
+                }
+            );
+            L.amigo.AmigoGray = L.tileLayer(
+                L.amigo.constants.amigoLayersData[1].tiles + '/{z}/{x}/{y}.png',
+                {
+                    attribution: 'Map data &copy; <a href="http://amigocloud.com">AmigoCloud</a>',
+                    name: 'AmigoGray',
+                    maxZoom: 22
+                }
+            );
+            L.amigo.AmigoSatellite = L.tileLayer(
+                L.amigo.constants.amigoLayersData[2].tiles + '/{z}/{x}/{y}.png',
+                {
+                    attribution: 'Map data &copy; <a href="http://amigocloud.com">AmigoCloud</a>',
+                    name: 'AmigoSatellite',
+                    maxZoom: 22
+                }
+            );
+        });
     },
     buildAmigoLayers: function (loadAmigoLayers) {
         var layersData = L.amigo.constants.amigoLayersData,
@@ -75,6 +102,8 @@ var map = L.Map.extend({
 
         if (config.options && !config.options.maxZoom) {
             config.options.maxZoom = 22;
+        } else if (!config.options) {
+            config.options = {maxZoom: 22};
         }
 
         url += L.amigo.auth.getTokenParam();
@@ -105,6 +134,8 @@ var map = L.Map.extend({
 
         if (config.options && !config.options.maxZoom) {
             config.options.maxZoom = 22;
+        } else if (!config.options) {
+            config.options = {maxZoom: 22};
         }
 
         L.amigo.utils.get(url).then(function (data) {
@@ -137,7 +168,7 @@ var map = L.Map.extend({
             layersCount++;
         }
         if (layersCount === 1) {
-            this.addLayer(this.baseLayers[layer]);
+            this.addLayer(this.baseLayers[layer].redraw());
         }
     },
     addExternalBaseLayer: function (name, url, options) {
@@ -160,6 +191,8 @@ var map = L.Map.extend({
 
         if (config.options && !config.options.maxZoom) {
             config.options.maxZoom = 22;
+        } else if (!config.options) {
+            config.options = {maxZoom: 22};
         }
 
         L.amigo.utils.get(url).then(function (data) {
@@ -185,6 +218,8 @@ var map = L.Map.extend({
 
         if (config.options && !config.options.maxZoom) {
             config.options.maxZoom = 22;
+        } else if (!config.options) {
+            config.options = {maxZoom: 22};
         }
 
         L.amigo.utils.get(url).then(function (data) {
