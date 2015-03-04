@@ -9640,12 +9640,15 @@ var auth = {
 
 var map = L.Map.extend({
     initialize: function (element, options) {
-        var layersControl;
+        var layersControl, initialLayer = [];
         options.loadAmigoLayers =
             (options.loadAmigoLayers === undefined) ? true :
             options.loadAmigoLayers;
 
         layersControl = this.buildAmigoLayers(options.loadAmigoLayers);
+        if (options.loadAmigoLayers) {
+            initialLayer = [L.amigo.AmigoStreet];
+        }
 
         L.Map.prototype.initialize.call(
             this,
@@ -9656,7 +9659,7 @@ var map = L.Map.extend({
                     {},
                     options,
                     {
-                        layers: [this.systemLayers['AmigoStreet']]
+                        layers: initialLayer
                     }
                 )
             )
@@ -9760,20 +9763,33 @@ var map = L.Map.extend({
         });
     },
     addBaseLayer: function (config, options) {
+        var layersCount = 0, layer;
         if (config.url) {
-            return this.addBaseLayerByUrl(config);
+            this.addBaseLayerByUrl(config);
         } else if (config.id) {
-            return this.addBaseLayerById(config);
+            this.addBaseLayerById(config);
         } else if (config.getContainer) {
-            return this.addBaseLayerWithLayer(config, options);
-        } else {
-            return;
+            this.addBaseLayerWithLayer(config, options);
+        }
+        for (layer in this.baseLayers) {
+            layersCount++;
+        }
+        if (layersCount === 1) {
+            this.addLayer(this.baseLayers[layer]);
         }
     },
     addExternalBaseLayer: function (name, url, options) {
+        var layersCount = 0, layer;
         this.baseLayers[name] =
             L.tileLayer(url, options);
         this.layersControl.addBaseLayer(this.baseLayers[name], name);
+
+        for (layer in this.baseLayers) {
+            layersCount++;
+        }
+        if (layersCount === 1) {
+            this.addLayer(this.baseLayers[layer]);
+        }
     },
     addBaseLayerByUrl: function (config) {
         var url = config.url + L.amigo.auth.getTokenParam(),
