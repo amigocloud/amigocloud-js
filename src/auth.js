@@ -8,6 +8,10 @@ var auth = {
         return this.token;
     },
     getTokenParam: function () {
-        return '?token=' + this.token;
+        if (this.token) {
+            return '?token=' + this.token;
+        } else {
+            return '';
+        }
     }
 };

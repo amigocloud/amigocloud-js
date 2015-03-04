@@ -75,7 +75,7 @@ var map = L.Map.extend({
             datasetData = data;
             _this.datasetLayers[datasetData.name] =
                 L.tileLayer(
-                    datasetData.tiles + '/{z}/{x}/{y}.png',
+                    datasetData.tiles + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
                     L.extend(
                         {},
                         config.options,
@@ -100,7 +100,7 @@ var map = L.Map.extend({
             datasetData = data;
             _this.datasetLayers[datasetData.name] =
                 L.tileLayer(
-                    datasetData.tiles + '/{z}/{x}/{y}.png',
+                    datasetData.tiles + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
                     L.extend(
                         {},
                         config.options,
@@ -138,7 +138,7 @@ var map = L.Map.extend({
             baseLayerData = data;
             _this.baseLayers[baseLayerData.name] =
                 L.tileLayer(
-                    baseLayerData.tiles + '/{z}/{x}/{y}.png',
+                    baseLayerData.tiles + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
                     L.extend(
                         {},
                         config.options,
@@ -159,7 +159,7 @@ var map = L.Map.extend({
             baseLayerData = data;
             _this.baseLayers[baseLayerData.name] =
                 L.tileLayer(
-                    baseLayerData.tiles + '/{z}/{x}/{y}.png',
+                    baseLayerData.tiles + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
                     L.extend(
                         {},
                         config.options,
