@@ -1,6 +1,6 @@
 'use strict';
 
-var AMap = L.Map.extend({
+var map = L.Map.extend({
     initialize: function (element, options) {
         var layersControl;
         options.loadAmigoLayers =
@@ -33,7 +33,6 @@ var AMap = L.Map.extend({
         if (!this.options.center) {
             this.setView([0.0, 0.0], 10);
         }
-
     },
     buildAmigoLayers: function (loadAmigoLayers) {
         var layersData = L.amigo.constants.amigoLayersData,
@@ -110,8 +109,19 @@ var AMap = L.Map.extend({
             return _this.datasetLayers[datasetData.name];
         });
     },
-    addBaseLayerById: function (baseLayerId) {
-        var url = '/base_layers/' + baseLayerId + L.amigo.auth.getTokenParam(),
+    addBaseLayer: function (config) {
+        if (config.url) {
+            return this.addBaseLayerByUrl(config);
+        } else if (config.id) {
+            return this.addBaseLayerById(config);
+        } else if (config.getContainer) {
+            return this.addBaseLayerWithLayer(config);
+        } else {
+            return;
+        }
+    },
+    addBaseLayerByUrl: function (config) {
+        var url = config.url + L.amigo.auth.getTokenParam(),
             _this = this,
             baseLayerData;
 
@@ -126,6 +136,27 @@ var AMap = L.Map.extend({
                 );
             _this.layersControl.addBaseLayer(_this.baseLayers[baseLayerData.name], baseLayerData.name);
         });
+    },
+    addBaseLayerById: function (config) {
+        var url = '/base_layers/' + config.id + L.amigo.auth.getTokenParam(),
+            _this = this,
+            baseLayerData;
+
+        L.amigo.utils.get(url).then(function (data) {
+            baseLayerData = data;
+            _this.baseLayers[baseLayerData.name] =
+                L.tileLayer(
+                    baseLayerData.tiles + '/{z}/{x}/{y}.png',
+                    {
+                        layerData: baseLayerData
+                    }
+                );
+            _this.layersControl.addBaseLayer(_this.baseLayers[baseLayerData.name], baseLayerData.name);
+        });
+    },
+    addBaseLayerWithLayer: function (layer) {
+        this.baseLayers[layer.options.name] = layer;
+        this.layersControl.addBaseLayer(this.baseLayers[layer.options.name], layer.options.name);
     },
     getBaseLayers: function () {
         return this.baseLayers;

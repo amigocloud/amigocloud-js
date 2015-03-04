@@ -18,7 +18,6 @@ var constants = {
             tiles: 'https://cdnamigocloud.global.ssl.fastly.net/api/v1/base_layers/3/tiles'
         }
     ],
-    baseUrl: 'http://localhost:8000',
-    apiUrl: '/api/v1',
-    version: '0.1.0'
+    baseUrl: 'https://www.amigocloud.com',
+    apiUrl: '/api/v1'
 };
