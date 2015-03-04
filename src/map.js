@@ -124,6 +124,11 @@ var map = L.Map.extend({
             return;
         }
     },
+    addExternalBaseLayer: function (name, url, options) {
+        this.baseLayers[name] =
+            L.tileLayer(url, options);
+        this.layersControl.addBaseLayer(this.baseLayers[name], name);
+    },
     addBaseLayerByUrl: function (config) {
         var url = config.url + L.amigo.auth.getTokenParam(),
             _this = this,
