@@ -9708,6 +9708,10 @@ var map = L.Map.extend({
             url = config.url,
             datasetData;
 
+        if (config.options && !config.options.maxZoom) {
+            config.options.maxZoom = 22;
+        }
+
         url += L.amigo.auth.getTokenParam();
         L.amigo.utils.get(url).then(function (data) {
             datasetData = data;
@@ -9734,6 +9738,10 @@ var map = L.Map.extend({
             _this = this,
             datasetData;
 
+        if (config.options && !config.options.maxZoom) {
+            config.options.maxZoom = 22;
+        }
+
         L.amigo.utils.get(url).then(function (data) {
             datasetData = data;
             _this.datasetLayers[datasetData.name] =
@@ -9751,13 +9759,13 @@ var map = L.Map.extend({
             return _this.datasetLayers[datasetData.name];
         });
     },
-    addBaseLayer: function (config) {
+    addBaseLayer: function (config, options) {
         if (config.url) {
             return this.addBaseLayerByUrl(config);
         } else if (config.id) {
             return this.addBaseLayerById(config);
         } else if (config.getContainer) {
-            return this.addBaseLayerWithLayer(config);
+            return this.addBaseLayerWithLayer(config, options);
         } else {
             return;
         }
@@ -9771,6 +9779,10 @@ var map = L.Map.extend({
         var url = config.url + L.amigo.auth.getTokenParam(),
             _this = this,
             baseLayerData;
+
+        if (config.options && !config.options.maxZoom) {
+            config.options.maxZoom = 22;
+        }
 
         L.amigo.utils.get(url).then(function (data) {
             baseLayerData = data;
@@ -9793,6 +9805,10 @@ var map = L.Map.extend({
             _this = this,
             baseLayerData;
 
+        if (config.options && !config.options.maxZoom) {
+            config.options.maxZoom = 22;
+        }
+
         L.amigo.utils.get(url).then(function (data) {
             baseLayerData = data;
             _this.baseLayers[baseLayerData.name] =
@@ -9809,7 +9825,10 @@ var map = L.Map.extend({
             _this.layersControl.addBaseLayer(_this.baseLayers[baseLayerData.name], baseLayerData.name);
         });
     },
-    addBaseLayerWithLayer: function (layer) {
+    addBaseLayerWithLayer: function (layer, options) {
+        for (var option in options) {
+            layer.options[option] = options[option];
+        }
         this.baseLayers[layer.options.name] = layer;
         this.layersControl.addBaseLayer(this.baseLayers[layer.options.name], layer.options.name);
     },
@@ -9827,8 +9846,29 @@ L.amigo = {
     constants: constants,
     utils: utils,
     auth: auth,
-    AmigoStreet: L.tileLayer(this.constants.amigoLayersData[0].tiles + '/{z}/{x}/{y}.png', {attribution: 'Map data &copy; <a href="http://amigocloud.com">AmigoCloud</a>', name: 'AmigoStreet'}),
-    AmigoGray: L.tileLayer(this.constants.amigoLayersData[1].tiles + '/{z}/{x}/{y}.png', {attribution: 'Map data &copy; <a href="http://amigocloud.com">AmigoCloud</a>', name: 'AmigoGray'}),
-    AmigoSatellite: L.tileLayer(this.constants.amigoLayersData[2].tiles + '/{z}/{x}/{y}.png', {attribution: 'Map data &copy; <a href="http://amigocloud.com">AmigoCloud</a>', name: 'AmigoSatellite'}),
+    AmigoStreet: L.tileLayer(
+        this.constants.amigoLayersData[0].tiles + '/{z}/{x}/{y}.png',
+        {
+            attribution: 'Map data &copy; <a href="http://amigocloud.com">AmigoCloud</a>',
+            name: 'AmigoStreet',
+            maxZoom: 22
+        }
+    ),
+    AmigoGray: L.tileLayer(
+        this.constants.amigoLayersData[1].tiles + '/{z}/{x}/{y}.png',
+        {
+            attribution: 'Map data &copy; <a href="http://amigocloud.com">AmigoCloud</a>',
+            name: 'AmigoGray',
+            maxZoom: 22
+        }
+    ),
+    AmigoSatellite: L.tileLayer(
+        this.constants.amigoLayersData[2].tiles + '/{z}/{x}/{y}.png',
+        {
+            attribution: 'Map data &copy; <a href="http://amigocloud.com">AmigoCloud</a>',
+            name: 'AmigoSatellite',
+            maxZoom: 22
+        }
+    ),
     version: '1.0.2'
 };
