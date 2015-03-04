@@ -9802,7 +9802,7 @@ var map = L.Map.extend({
                         {},
                         config.options,
                         {
-                            datasetData: datasetData
+                            baseLayerData: baseLayerData
                         }
                     )
                 );
