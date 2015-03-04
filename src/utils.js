@@ -2,7 +2,7 @@
 
 var utils = {
     parseUrl: function (url) {
-        if (url.substr(0, 5) === 'https') {
+        if (url.substr(0, 4) === 'http') {
             return url
         } else {
             return L.amigo.constants.baseUrl + L.amigo.constants.apiUrl + url;

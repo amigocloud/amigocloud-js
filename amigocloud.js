@@ -9559,7 +9559,7 @@ var constants = {
 
 var utils = {
     parseUrl: function (url) {
-        if (url.substr(0, 5) === 'https') {
+        if (url.substr(0, 4) === 'http') {
             return url
         } else {
             return L.amigo.constants.baseUrl + L.amigo.constants.apiUrl + url;
@@ -9735,9 +9735,13 @@ var map = L.Map.extend({
             _this.datasetLayers[datasetData.name] =
                 L.tileLayer(
                     datasetData.tiles + '/{z}/{x}/{y}.png',
-                    {
-                        datasetData: datasetData
-                    }
+                    L.extend(
+                        {},
+                        config.options,
+                        {
+                            datasetData: datasetData
+                        }
+                    )
                 );
             _this.layersControl.addOverlay(_this.datasetLayers[datasetData.name], datasetData.name);
             return _this.datasetLayers[datasetData.name];
@@ -9764,9 +9768,13 @@ var map = L.Map.extend({
             _this.baseLayers[baseLayerData.name] =
                 L.tileLayer(
                     baseLayerData.tiles + '/{z}/{x}/{y}.png',
-                    {
-                        layerData: baseLayerData
-                    }
+                    L.extend(
+                        {},
+                        config.options,
+                        {
+                            datasetData: datasetData
+                        }
+                    )
                 );
             _this.layersControl.addBaseLayer(_this.baseLayers[baseLayerData.name], baseLayerData.name);
         });
@@ -9781,9 +9789,13 @@ var map = L.Map.extend({
             _this.baseLayers[baseLayerData.name] =
                 L.tileLayer(
                     baseLayerData.tiles + '/{z}/{x}/{y}.png',
-                    {
-                        layerData: baseLayerData
-                    }
+                    L.extend(
+                        {},
+                        config.options,
+                        {
+                            datasetData: datasetData
+                        }
+                    )
                 );
             _this.layersControl.addBaseLayer(_this.baseLayers[baseLayerData.name], baseLayerData.name);
         });

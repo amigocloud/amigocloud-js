@@ -101,9 +101,13 @@ var map = L.Map.extend({
             _this.datasetLayers[datasetData.name] =
                 L.tileLayer(
                     datasetData.tiles + '/{z}/{x}/{y}.png',
-                    {
-                        datasetData: datasetData
-                    }
+                    L.extend(
+                        {},
+                        config.options,
+                        {
+                            datasetData: datasetData
+                        }
+                    )
                 );
             _this.layersControl.addOverlay(_this.datasetLayers[datasetData.name], datasetData.name);
             return _this.datasetLayers[datasetData.name];
@@ -130,9 +134,13 @@ var map = L.Map.extend({
             _this.baseLayers[baseLayerData.name] =
                 L.tileLayer(
                     baseLayerData.tiles + '/{z}/{x}/{y}.png',
-                    {
-                        layerData: baseLayerData
-                    }
+                    L.extend(
+                        {},
+                        config.options,
+                        {
+                            datasetData: datasetData
+                        }
+                    )
                 );
             _this.layersControl.addBaseLayer(_this.baseLayers[baseLayerData.name], baseLayerData.name);
         });
@@ -147,9 +155,13 @@ var map = L.Map.extend({
             _this.baseLayers[baseLayerData.name] =
                 L.tileLayer(
                     baseLayerData.tiles + '/{z}/{x}/{y}.png',
-                    {
-                        layerData: baseLayerData
-                    }
+                    L.extend(
+                        {},
+                        config.options,
+                        {
+                            datasetData: datasetData
+                        }
+                    )
                 );
             _this.layersControl.addBaseLayer(_this.baseLayers[baseLayerData.name], baseLayerData.name);
         });
