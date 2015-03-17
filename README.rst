@@ -58,6 +58,8 @@ The ``.then()`` method binds a callback to be run when the response comes back f
 Websockets
 ~~~~~~~~~~
 
+Make sure to read `our help page about our websocket events <http://help.amigocloud.com/hc/en-us/articles/204246154>`__ before continue reading.
+
 To start listening to websocket events, use the following functions:
 
 .. code:: javascript
