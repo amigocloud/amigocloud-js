@@ -2,6 +2,8 @@
 
 L.amigo = {
     map: map,
+    marker: marker,
+    featureLayer: featureLayer,
     constants: constants,
     utils: utils,
     auth: auth,

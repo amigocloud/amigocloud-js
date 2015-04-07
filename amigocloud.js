@@ -9894,6 +9894,8 @@ var map = L.Map.extend({
 
 L.amigo = {
     map: map,
+    marker: marker,
+    featureLayer: featureLayer,
     constants: constants,
     utils: utils,
     auth: auth,
