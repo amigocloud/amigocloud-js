@@ -13,6 +13,8 @@ module.exports = function (grunt) {
                     'src/utils.js',
                     'src/auth.js',
                     'src/map.js',
+                    'src/marker.js',
+                    'src/feature-layer.js',
                     'src/amigocloud.js'
                 ],
                 dest: 'amigocloud.js'

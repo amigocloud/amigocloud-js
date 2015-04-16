@@ -245,6 +245,24 @@ var map = L.Map.extend({
         this.baseLayers[layer.options.name] = layer;
         this.layersControl.addBaseLayer(this.baseLayers[layer.options.name], layer.options.name);
     },
+    addMapBoxLayer: function (config) {
+        var url = 'https://api.tiles.mapbox.com/v4/' +
+            config.id + '/{z}/{x}/{y}.png' +
+            '?access_token=' + config.accessToken;
+
+        if (config.options && !config.options.maxZoom) {
+            config.options.maxZoom = 22;
+        } else if (!config.options) {
+            config.options = {maxZoom: 22};
+        }
+
+        this.addExternalBaseLayer(config.name, url, config);
+    },
+    addAuthLayer: function (config) {
+        if (config.provider === 'mapbox') {
+            this.addMapBoxLayer(config);
+        }
+    },
     getBaseLayers: function () {
         return this.baseLayers;
     },
