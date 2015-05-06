@@ -1,0 +1,19 @@
+.amigocloud-attribution-logo {
+    position: absolute;
+    bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.amigocloud-attribution-logo > div {
+    width: 140px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 4px;
+    padding: 6px 2px 0;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 3px;
+}
