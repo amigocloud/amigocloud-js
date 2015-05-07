@@ -19,6 +19,7 @@ var constants = {
         }
     ],
     baseUrl: 'https://www.amigocloud.com',
+    socketServerUrl: 'https://www.amigocloud.com/amigosocket',
     amigoLogoUrl: 'https://cdnamigocloud.global.ssl.fastly.net/static/dashboard_app/img/amigocloud_logo_forwhitebackground.png',
     apiUrl: '/api/v1'
 };

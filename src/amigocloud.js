@@ -7,6 +7,7 @@ L.amigo = {
     constants: constants,
     utils: utils,
     auth: auth,
+    realtime: realtime,
     AmigoStreet: L.tileLayer(
         this.constants.amigoLayersData[0].tiles + '/{z}/{x}/{y}.png',
         {
@@ -33,3 +34,5 @@ L.amigo = {
     ),
     version: '1.0.22'
 };
+
+L.amigo.realtime.socket = io.connect(constants.socketServerUrl);

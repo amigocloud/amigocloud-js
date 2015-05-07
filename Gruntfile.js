@@ -8,12 +8,14 @@ module.exports = function (grunt) {
             js: {
                 src: [
                     'lib/leaflet-0.7.3/leaflet-src.js',
+                    'lib/*.js',
                     'src/constants.js',
                     'src/utils.js',
                     'src/auth.js',
                     'src/map.js',
                     'src/marker.js',
                     'src/feature-layer.js',
+                    'src/realtime.js',
                     'src/amigocloud.js'
                 ],
                 dest: 'amigocloud.js'
