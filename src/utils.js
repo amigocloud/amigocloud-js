@@ -49,7 +49,7 @@ var utils = {
         } else {
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            };
         }
         return L.amigo.utils.http('POST', url, data, headers);
     },

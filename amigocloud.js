@@ -13427,7 +13427,7 @@ var constants = {
     ],
     baseUrl: 'https://www.amigocloud.com',
     socketServerUrl: 'https://www.amigocloud.com/amigosocket',
-    amigoLogoUrl: 'https://cdnamigocloud.global.ssl.fastly.net/static/dashboard_app/img/amigocloud_logo_forwhitebackground.png',
+    amigoLogoUrl: 'https://cdnamigocloud.global.ssl.fastly.net/static/homepage/img/press-kit/amigocloud.png',
     apiUrl: '/api/v1'
 };
 'use strict';
@@ -13481,7 +13481,7 @@ var utils = {
         } else {
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            };
         }
         return L.amigo.utils.http('POST', url, data, headers);
     },
@@ -13541,13 +13541,17 @@ var map = L.Map.extend({
         );
         layersControl.addTo(this);
 
-        if (this.options.showAmigoLogo) {
+        if (this.options.amigoLogo) {
             amigoLogo = L.control({
                 position: 'bottomright'
             });
             amigoLogo.onAdd = function (map) {
                 var inner;
-                this._container = L.DomUtil.create('div', 'amigocloud-attribution-logo');
+                this._container = L.DomUtil.create(
+                    'div',
+                    'amigocloud-attribution-logo logo-' +
+                        (this.options.showAmigoLogo === 'right' ? 'right' : 'center')
+                );
 
                 inner = '<div><a href="http://amigocloud.com">' +
                     '<img src="' + L.amigo.constants.amigoLogoUrl + '">' +
@@ -13568,6 +13572,7 @@ var map = L.Map.extend({
                 return this;
             };
             amigoLogo.addTo(this);
+            this.amigoLogo = amigoLogo;
         }
 
         // Disable the default 'Leaflet' text
@@ -13905,12 +13910,12 @@ var realtime = {
             get = L.amigo.utils.get,
             constants = L.amigo.constants;
 
-        get(constants.baseUrl + constants.apiUrl + '/me?token=' + this.token).
+        get(constants.baseUrl + constants.apiUrl +
+            '/me?token=' + this.token + '&format=json').
             then(function (meData) {
                 _this.userId = parseInt(meData.id);
-                get(url + '?token=' + _this.token).
+                get(url + '?token=' + _this.token + '&format=json').
                     then(function (data) {
-                        console.log(data);
                         _this.authenticate(
                             parseInt(_this.userId),
                             data.websocket_session,
@@ -13919,7 +13924,7 @@ var realtime = {
                             }
                         );
                     });
-            })
+            });
     }
 };
 'use strict';
@@ -13956,7 +13961,7 @@ L.amigo = {
             maxZoom: 22
         }
     ),
-    version: '1.0.3'
+    version: '1.0.31'
 };
 
 L.amigo.realtime.socket = io.connect(constants.socketServerUrl);

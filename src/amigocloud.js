@@ -32,7 +32,7 @@ L.amigo = {
             maxZoom: 22
         }
     ),
-    version: '1.0.3'
+    version: '1.0.31'
 };
 
 L.amigo.realtime.socket = io.connect(constants.socketServerUrl);

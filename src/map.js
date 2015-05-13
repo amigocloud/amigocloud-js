@@ -28,13 +28,17 @@ var map = L.Map.extend({
         );
         layersControl.addTo(this);
 
-        if (this.options.showAmigoLogo) {
+        if (this.options.amigoLogo) {
             amigoLogo = L.control({
                 position: 'bottomright'
             });
             amigoLogo.onAdd = function (map) {
                 var inner;
-                this._container = L.DomUtil.create('div', 'amigocloud-attribution-logo');
+                this._container = L.DomUtil.create(
+                    'div',
+                    'amigocloud-attribution-logo logo-' +
+                        (this.options.showAmigoLogo === 'right' ? 'right' : 'center')
+                );
 
                 inner = '<div><a href="http://amigocloud.com">' +
                     '<img src="' + L.amigo.constants.amigoLogoUrl + '">' +
@@ -55,6 +59,7 @@ var map = L.Map.extend({
                 return this;
             };
             amigoLogo.addTo(this);
+            this.amigoLogo = amigoLogo;
         }
 
         // Disable the default 'Leaflet' text
