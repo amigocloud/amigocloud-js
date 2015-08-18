@@ -3,7 +3,7 @@
 var utils = {
     parseUrl: function (url) {
         if (url.substr(0, 4) === 'http') {
-            return url
+            return url;
         } else {
             return L.amigo.constants.baseUrl + L.amigo.constants.apiUrl + url;
         }
@@ -40,7 +40,12 @@ var utils = {
     me: function () {
         return L.amigo.utils.get('/me');
     },
-    get: function (url) {
+    get: function (url, data) {
+        if (typeof data !== 'undefined') {
+            url += '?' + L.amigo.utils.params(data) + '&token=' + L.amigo.auth.getToken() + '&format=json';
+        } else {
+            url += '?token=' + L.amigo.auth.getToken() + '&format=json';
+        }
         return L.amigo.utils.http('GET', url);
     },
     post: function (url, data, headers) {
@@ -61,4 +66,3 @@ var utils = {
         return parts.join('&');
     }
 };
-

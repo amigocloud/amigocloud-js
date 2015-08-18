@@ -13432,10 +13432,27 @@ var constants = {
 };
 'use strict';
 
+var auth = {
+    setToken: function (token) {
+        this.token = token;
+    },
+    getToken: function () {
+        return this.token;
+    },
+    getTokenParam: function () {
+        if (this.token) {
+            return '?token=' + this.token;
+        } else {
+            return '';
+        }
+    }
+};
+'use strict';
+
 var utils = {
     parseUrl: function (url) {
         if (url.substr(0, 4) === 'http') {
-            return url
+            return url;
         } else {
             return L.amigo.constants.baseUrl + L.amigo.constants.apiUrl + url;
         }
@@ -13472,7 +13489,12 @@ var utils = {
     me: function () {
         return L.amigo.utils.get('/me');
     },
-    get: function (url) {
+    get: function (url, data) {
+        if (typeof data !== 'undefined') {
+            url += '?' + L.amigo.utils.params(data) + '&token=' + L.amigo.auth.getToken() + '&format=json';
+        } else {
+            url += '?token=' + L.amigo.auth.getToken() + '&format=json';
+        }
         return L.amigo.utils.http('GET', url);
     },
     post: function (url, data, headers) {
@@ -13491,24 +13513,6 @@ var utils = {
             parts.push([attr, encodeURIComponent(params[attr])].join('='));
         }
         return parts.join('&');
-    }
-};
-
-'use strict';
-
-var auth = {
-    setToken: function (token) {
-        this.token = token;
-    },
-    getToken: function () {
-        return this.token;
-    },
-    getTokenParam: function () {
-        if (this.token) {
-            return '?token=' + this.token;
-        } else {
-            return '';
-        }
     }
 };
 'use strict';
@@ -13929,6 +13933,49 @@ var realtime = {
 };
 'use strict';
 
+var events = {
+    token: '',
+    socket: io.connect(constants.socketServerUrl, {port: 443}),
+    authenticate: function () {
+        var data = {
+            'userid' : this.userId,
+            'websocket_session': this.websocketSession
+        };
+
+        this.socket.emit('authenticate', data);
+    },
+    emit: function (eventName, data, callback) {
+        var _this = this;
+        this.socket.emit(eventName, data, function () {
+            var args = arguments;
+            if (callback) {
+                callback.apply(_this.socket, args);
+            }
+        });
+    },
+    on: function (eventName, callback) {
+        this.socket.on(eventName, callback);
+    },
+    startListening: function () {
+        var _this = this,
+            get = L.amigo.utils.get,
+            constants = L.amigo.constants,
+            auth = L.amigo.auth;
+
+        _this.token = auth.getToken();
+        get(constants.baseUrl + constants.apiUrl + '/me').
+            then(function (meData) {
+                _this.userId = parseInt(meData.id);
+                get(meData.start_websocket_session).
+                    then(function (data) {
+                        _this.websocketSession = data.websocket_session;
+                        _this.authenticate();
+                    });
+            });
+    }
+};
+'use strict';
+
 L.amigo = {
     map: map,
     marker: marker,
@@ -13937,6 +13984,7 @@ L.amigo = {
     utils: utils,
     auth: auth,
     realtime: realtime,
+    events: events,
     AmigoStreet: L.tileLayer(
         this.constants.amigoLayersData[0].tiles + '/{z}/{x}/{y}.png',
         {

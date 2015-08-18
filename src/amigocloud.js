@@ -8,6 +8,7 @@ L.amigo = {
     utils: utils,
     auth: auth,
     realtime: realtime,
+    events: events,
     AmigoStreet: L.tileLayer(
         this.constants.amigoLayersData[0].tiles + '/{z}/{x}/{y}.png',
         {
