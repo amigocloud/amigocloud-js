@@ -21,3 +21,19 @@
 .amigocloud-attribution-logo > div img{
     height: 20px;
 }
+
+.ac-feature-popup .title{
+    text-align: center;
+}
+
+.ac-feature-popup ul {
+    padding: 0 10px;
+}
+
+.ac-feature-popup li{
+    list-style: none;
+}
+
+.ac-feature-popup label{
+    font-weight: 500;
+}

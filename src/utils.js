@@ -13,10 +13,14 @@ var utils = {
 
         url = L.amigo.utils.parseUrl(url);
 
-        xmlHttp.then = function (callback) {
+        xmlHttp.then = function (callback, errorCallback) {
             this.onreadystatechange = function () {
                 if (xmlHttp.readyState === 4) {
-                    callback(JSON.parse(this.responseText));
+                    if (xmlHttp.status === 200) {
+                        callback(JSON.parse(this.responseText));
+                    } else {
+                        errorCallback(JSON.parse(this.responseText));
+                    }
                 }
             };
 
@@ -64,5 +68,127 @@ var utils = {
             parts.push([attr, encodeURIComponent(params[attr])].join('='));
         }
         return parts.join('&');
-    }
+    },
+    buildPopupHTML: function (data, config) {
+        var header =  '<h3 class="title">';
+        var body = '<div class="content"><ul>';
+        var name;
+
+        if (config.popupTitle) {
+            header += data.data[0][config.popupTitle];
+        }
+
+        header += '</h3>';
+
+        for (var i = 0; i < data.columns.length; i++) {
+            if (data.columns[i].type === 'geometry') {
+                continue;
+            }
+            name = data.columns[i].name;
+            body += '<li class="row-attribute">'
+            body += '<label>' + name + ': </label>';
+            body += '<span>' + data.data[0][name] + '</span>';
+            body += '</li>';
+        }
+
+        body += '</ul></div>';
+
+        return header + body;
+    },
+    buildPopupQuery: function (e, config) {
+        var query = 'SELECT ';
+
+        if (config.displayFields) {
+            query += config.displayFields.join(',');
+        } else {
+            query += '*'
+        }
+        query += ' FROM ' + e.target.options.datasetData.table_name +
+            " WHERE amigo_id='" + e.data.amigo_id + "'";
+
+        return query;
+    },
+    showPopup: function (e, config, map) {
+        var datasetData = e.target.options.datasetData,
+            popupHTMLString, queryString, queryURL;
+        if (e.data) {
+            // First request the row's data'
+            queryURL = datasetData.project;
+            queryString = L.amigo.utils.buildPopupQuery(e, config);
+            L.amigo.utils.get(
+                queryURL + '/sql',
+                {
+                    query: queryString
+                }
+            ).then(function (data) {
+                //Now build the HTML for the popup with data
+                popupHTMLString = L.amigo.utils.buildPopupHTML(data, config);
+
+                L.popup({
+                    className: 'ac-feature-popup ' + config.className
+                }).setLatLng(e.latlng)
+                    .setContent(popupHTMLString)
+                    .openOn(map);
+            }, function (error) {
+                L.popup({
+                    className: 'ac-feature-popup error' + config.className
+                }).setLatLng(e.latlng)
+                    .setContent(
+                        'There was an error requesting the data. ' +
+                            'Please check that the display fields are exact matches of column names on this dataset.'
+                    ).openOn(map);
+            });
+        }
+    },
+    processAdditionalDatasetConfig: function (datasetLayer, config, map) {
+        if (config.popup) {
+            L.amigo.utils.processPopupDatasetConfig(
+                datasetLayer,
+                config.popup,
+                map
+            );
+        }
+
+        return datasetLayer;
+    },
+    processPopupDatasetConfig: function (datasetLayer, popupConfig, map) {
+        var name = datasetLayer.options.datasetData.name;
+
+        if (!map.utfGrids) {
+            map.utfGrids = {};
+        }
+
+        map.on('overlayadd', function (e) {
+            map.utfGrids[name] = new L.UtfGrid(
+                e.layer.options.datasetData.tiles + '/{z}/{x}/{y}.json' +
+                    L.amigo.auth.getTokenParam(),
+                {
+                    useJsonP: false,
+                    minZoom: 0,
+                    maxZoom: 20,
+                    datasetData: e.layer.options.datasetData
+                }
+            );
+
+            map.utfGrids[name].on('click', function (e) {
+                if (popupConfig.overrideCallback) {
+                    popupConfig.overrideCallback(e, map);
+                } else {
+                    L.amigo.utils.showPopup(e, popupConfig, map);
+                }
+
+                if (popupConfig.additionalCallback) {
+                    popupConfig.additionalCallback(e, map);
+                }
+            });
+
+            map.addLayer(map.utfGrids[name]);
+        });
+
+        map.on('overlayremove', function (e) {
+            map.removeLayer(map.utfGrids[name]);
+            delete map.utfGrids[name];
+        });
+    },
+
 };

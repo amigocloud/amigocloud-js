@@ -37,7 +37,7 @@ var map = L.Map.extend({
                 this._container = L.DomUtil.create(
                     'div',
                     'amigocloud-attribution-logo logo-' +
-                        (this.options.showAmigoLogo === 'right' ? 'right' : 'center')
+                        (this.options.amigoLogo === 'right' ? 'right' : 'center')
                 );
 
                 inner = '<div><a href="http://amigocloud.com">' +
@@ -121,15 +121,22 @@ var map = L.Map.extend({
         return this.layersControl;
     },
     addDatasetLayer: function (config) {
+        var datasetLayer;
         if (config.url) {
-            return this.addDatasetLayerByUrl(config);
+            datasetLayer = this.addDatasetLayerByUrl(
+                config,
+                L.amigo.utils.processAdditionalDatasetConfig
+            );
         } else if (config.ids) {
-            return this.addDatasetLayerByIds(config);
-        } else {
-            return;
+            datasetLayer = this.addDatasetLayerByIds(
+                config,
+                L.amigo.utils.processAdditionalDatasetConfig
+            );
         }
+
+        return datasetLayer;
     },
-    addDatasetLayerByUrl: function (config) {
+    addDatasetLayerByUrl: function (config, additionalCallback) {
         var _this = this,
             url = config.url,
             datasetData;
@@ -140,7 +147,6 @@ var map = L.Map.extend({
             config.options = {maxZoom: 22};
         }
 
-        url += L.amigo.auth.getTokenParam();
         L.amigo.utils.get(url).then(function (data) {
             datasetData = data;
             _this.datasetLayers[datasetData.name] =
@@ -155,10 +161,16 @@ var map = L.Map.extend({
                     )
                 );
             _this.layersControl.addOverlay(_this.datasetLayers[datasetData.name], datasetData.name);
+
+            additionalCallback(
+                _this.datasetLayers[datasetData.name],
+                config,
+                _this
+            );
             return _this.datasetLayers[datasetData.name];
         });
     },
-    addDatasetLayerByIds: function (config) {
+    addDatasetLayerByIds: function (config, additionalCallback) {
         var url = '/users/' + config.ids.user + '/projects/' +
             config.ids.project +
             ((config.type === 'vector') ? '/datasets/' : '/raster_datasets/') +
@@ -186,6 +198,12 @@ var map = L.Map.extend({
                     )
                 );
             _this.layersControl.addOverlay(_this.datasetLayers[datasetData.name], datasetData.name);
+
+            additionalCallback(
+                _this.datasetLayers[datasetData.name],
+                config,
+                _this
+            );
             return _this.datasetLayers[datasetData.name];
         });
     },
