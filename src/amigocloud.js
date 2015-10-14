@@ -36,4 +36,4 @@ L.amigo = {
     version: '1.0.4'
 };
 
-L.amigo.realtime.socket = io.connect(constants.socketServerUrl);
+L.amigo.realtime.socket = amigo_io.connect(constants.socketServerUrl);

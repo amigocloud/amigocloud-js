@@ -2,7 +2,7 @@
 
 var events = {
     token: '',
-    socket: io.connect(constants.socketServerUrl, {port: 443}),
+    socket: amigo_io.connect(constants.socketServerUrl, {port: 443}),
     authenticate: function () {
         var data = {
             'userid' : this.userId,

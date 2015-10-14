@@ -13405,6 +13405,13 @@ if (typeof define === "function" && define.amd) {
   define([], function () { return io; });
 }
 })();
+
+
+/* 
+Namespace this socket.io version to avoid conflicts if there's another version 
+of socket.io over there.
+*/
+var amigo_io = io;
 'use strict';
 
 var constants = {
@@ -14079,7 +14086,7 @@ var realtime = {
 
 var events = {
     token: '',
-    socket: io.connect(constants.socketServerUrl, {port: 443}),
+    socket: amigo_io.connect(constants.socketServerUrl, {port: 443}),
     authenticate: function () {
         var data = {
             'userid' : this.userId,
@@ -14156,4 +14163,4 @@ L.amigo = {
     version: '1.0.4'
 };
 
-L.amigo.realtime.socket = io.connect(constants.socketServerUrl);
+L.amigo.realtime.socket = amigo_io.connect(constants.socketServerUrl);
