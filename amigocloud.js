@@ -13831,7 +13831,7 @@ var map = L.Map.extend({
             datasetData = data;
             _this.datasetLayers[datasetData.name] =
                 L.tileLayer(
-                    datasetData.tiles + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
+                    datasetData.tiles.replace('?format=json', '') + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
                     L.extend(
                         {},
                         config.options,
@@ -14153,7 +14153,7 @@ L.amigo = {
             maxZoom: 22
         }
     ),
-    version: '1.0.4'
+    version: '1.0.5'
 };
 
 L.amigo.realtime.socket = io.connect(constants.socketServerUrl);
