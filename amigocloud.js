@@ -13562,7 +13562,7 @@ var utils = {
             popupHTMLString, queryString, queryURL;
         if (e.data) {
             // First request the row's data'
-            queryURL = datasetData.project;
+            queryURL = datasetData.project.replace('?format=json', '');
             queryString = L.amigo.utils.buildPopupQuery(e, config);
             L.amigo.utils.get(
                 queryURL + '/sql',
@@ -13609,7 +13609,7 @@ var utils = {
 
         map.on('overlayadd', function (e) {
             map.utfGrids[name] = new L.UtfGrid(
-                e.layer.options.datasetData.tiles + '/{z}/{x}/{y}.json' +
+                e.layer.options.datasetData.tiles.replace('?format=json', '') + '/{z}/{x}/{y}.json' +
                     L.amigo.auth.getTokenParam(),
                 {
                     useJsonP: false,
@@ -13794,7 +13794,7 @@ var map = L.Map.extend({
             datasetData = data;
             _this.datasetLayers[datasetData.name] =
                 L.tileLayer(
-                    datasetData.tiles + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
+                    datasetData.tiles.replace('?format=json', '') + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
                     L.extend(
                         {},
                         config.options,
@@ -13894,7 +13894,7 @@ var map = L.Map.extend({
             baseLayerData = data;
             _this.baseLayers[baseLayerData.name] =
                 L.tileLayer(
-                    baseLayerData.tiles + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
+                    baseLayerData.tiles.replace('?format=json', '') + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
                     L.extend(
                         {},
                         config.options,
@@ -13921,7 +13921,7 @@ var map = L.Map.extend({
             baseLayerData = data;
             _this.baseLayers[baseLayerData.name] =
                 L.tileLayer(
-                    baseLayerData.tiles + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
+                    baseLayerData.tiles.replace('?format=json', '') + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
                     L.extend(
                         {},
                         config.options,
