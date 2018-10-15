@@ -188,7 +188,7 @@ var map = L.Map.extend({
             datasetData = data;
             _this.datasetLayers[datasetData.name] =
                 L.tileLayer(
-                    datasetData.tiles + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
+                    datasetData.tiles.replace('?format=json', '') + '/{z}/{x}/{y}.png' + L.amigo.auth.getTokenParam(),
                     L.extend(
                         {},
                         config.options,
